@@ -6,7 +6,7 @@ const Submit = () => {
   const typesArr = [ "Salt", "Residents", "Other" ]
 
   const initState = () => {
-    setSaltActions([{"Class": null, "Name": null, "Type": null}])
+    setSaltActions([{"Class": 1, "Name": null, "Type": null}])
   }
 
   const getParent = (el: any) => {
@@ -81,7 +81,7 @@ const Submit = () => {
       let ptr = prevState
       if (idxPath.length !== 0) {
         let curDepth = depth
-        while (curDepth > 0) {
+        while (curDepth > 1) {
           ptr = ptr[idxPath.shift()]["SaltActions"]
           curDepth -= 1
         }
@@ -89,9 +89,21 @@ const Submit = () => {
 
       // ptr will just point to the element that was clicked...
       // - I want to stop at the parent
-      console.log(ptr)
+      // - idx will refer to the current element...
+      // - Use the indexes in idxPath...the remaining element
+      //    in idxPath is probably the one you need
+      // - Stop at the depth before...
+      
+      if (idxPath.length === 0) {
+        // TODO: Understand why does prevState= work but ptr= doesn't...?
+        prevState = [ ...ptr, {"Class": null, "Name": null, "Type": null} ]
+      } else {
+        const targIdx = idxPath.shift()
+        ptr[targIdx]["SaltActions"] = [ ...ptr[targIdx]["SaltActions"],
+                                        {"Class": null, "Name": null, "Type": null} ]
+      }
 
-      return prevState
+      return [ ...prevState ]
     })
   }
 
@@ -114,6 +126,7 @@ const Submit = () => {
                                  onClick={(event)=> addSaltAction(event, i, depth)}/>
                         </span> : <></> }
           {/* // ----- The radio buttons within the fieldset ----- // */}
+          <label>Type: </label>
           { typesArr.map((type: any, j: number) => {
             return (
               <span key={j+String(idx)+String(depth)}>
