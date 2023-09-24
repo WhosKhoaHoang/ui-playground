@@ -6,7 +6,7 @@ const Submit = () => {
   const typesArr = [ "Salt", "Residents", "Other" ]
 
   const initState = () => {
-    setSaltActions([{"Class": 1, "Name": null, "Type": null}])
+    setSaltActions([{"Class": null, "Name": null, "Type": null}])
   }
 
   const getParent = (el: any) => {
@@ -21,6 +21,9 @@ const Submit = () => {
   }
 
   const determineNestedType = (event: any, idx: number, depth: number, type: any) => {
+
+    console.log(idx)
+
     if (type === "Salt") {
       setSaltActions((prevState) => {
         // ========== BACKTRACK ========== //      
@@ -108,6 +111,7 @@ const Submit = () => {
   }
 
   const renderSaltActions = (fields: any, saltActions: any, idx: number, depth: number, id: any) => {
+    // THINK: idx and depth would belong to a parent one depth above
     saltActions.map((item: any, i: number) => {
       const curId = getId()
       fields.push(
@@ -117,7 +121,12 @@ const Submit = () => {
         //         After all, all you're really concerned about is location...not actual elements.
         <div style={ { "marginLeft": 5+(10*depth) } }
              key={i+String(idx)+String(depth)}>
-          { idx === 0 ? <span style={ { "marginRight": "10px"} }>
+          {/* ----- Add salt action button ----- */}
+          {/* TODO: UI can crash in the following case:
+            - Add a 2nd salt action item   
+            - Keep adding nested salt action items on that 2nd one until UI crashes */}
+          {/* TODO: Add a remove button next to each individual salt action item */}
+          { depth === 0 || (depth > 0 && i === 0) ? <span style={ { "marginRight": "10px"} }>
                           <input data-parent-idx={idx}
                                  data-parent-depth={depth-1}
                                  data-idx={i} data-depth={depth}
@@ -135,7 +144,7 @@ const Submit = () => {
                        data-parent-depth={depth-1}
                        data-idx={i} data-depth={depth}
                        data-parent-id={id} data-id={curId}
-                       name={ "type_"+String(idx)+String(depth) } type="radio"
+                       name={ "type_"+String(idx)+String(depth)+curId } type="radio"
                        onClick={(event) => determineNestedType(event, i, depth, type) }/>
               </span>
             )
@@ -161,6 +170,9 @@ const Submit = () => {
         <div>
           { renderSaltActions([], saltActions, 0, 0, getId()) }
         </div>
+
+        { void console.log("saltActions is: ", saltActions) }
+
       </div>  
     </>
   );
