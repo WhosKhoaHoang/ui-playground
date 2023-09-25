@@ -126,7 +126,7 @@ const Submit = () => {
             - Add a 2nd salt action item   
             - Keep adding nested salt action items on that 2nd one until UI crashes */}
           {/* TODO: Add a remove button next to each individual salt action item */}
-          { depth === 0 || (depth > 0 && i === 0) ? <span style={ { "marginRight": "10px"} }>
+          {i == 0 ? <span style={ { "marginRight": "10px"} }>
                           <input data-parent-idx={idx}
                                  data-parent-depth={depth-1}
                                  data-idx={i} data-depth={depth}
