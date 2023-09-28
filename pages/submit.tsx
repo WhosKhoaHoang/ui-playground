@@ -81,7 +81,8 @@ const Submit = () => {
       }
 
       // ========== FORWARD TRAVERSAL ========== //
-      let ptr = prevState
+      let newStuff = [...prevState]
+      let ptr = newStuff
       if (idxPath.length !== 0) {
         let curDepth = depth
         while (curDepth > 1) {
@@ -99,14 +100,14 @@ const Submit = () => {
       
       if (idxPath.length === 0) {
         // TODO: Understand why does prevState= work but ptr= doesn't...?
-        prevState = [ ...ptr, {"Class": null, "Name": null, "Type": null} ]
+        newStuff = [ ...ptr, {"Class": null, "Name": null, "Type": null} ]
       } else {
         const targIdx = idxPath.shift()
         ptr[targIdx]["SaltActions"] = [ ...ptr[targIdx]["SaltActions"],
                                         {"Class": null, "Name": null, "Type": null} ]
       }
 
-      return [ ...prevState ]
+      return newStuff
     })
   }
 
